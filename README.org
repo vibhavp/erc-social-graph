@@ -6,5 +6,6 @@
   Add this file to your load-path, add the module to =erc-modules=:
   #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path (expand-file-name "/path/to/erc-social-graph.el"))
-  (add-to-list 'erc-modules 'social-graph)
+  (require 'erc-social-graph)
+  (erc-social-graph-enable)
   #+END_SRC

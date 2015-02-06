@@ -26,20 +26,21 @@
   :type 'function
   :group 'erc-social-graph)
 
-(defvar graph (make-hash-table :test 'equal))
+(defvar sgraph-table (make-hash-table :test 'equal))
 
 (defun sgraph-update-graph (sender text)
   "Update the graph"
   (maphash (lambda (nick value)
-	     (let ((result (ignore-errors (string-match (format "\\<%s\\>\\([^[:alpha:]]\\|$\\)"
-								(downcase nick))
-							(downcase text)))))
+	     (let ((result (ignore-errors (string-match
+					   (format "\\<%s\\>\\([^[:alpha:]]\\|$\\)"
+						   (downcase nick))
+					   (downcase text)))))
 	       (when result
 		 (let* ((key (concat (downcase sender) "-" (downcase nick)))
-			(times (gethash key graph nil)))
+			(times (gethash key (gethash (buffer-name) sgraph-table) nil)))
 		   (if (eq times nil)
-		       (puthash key 1 graph)
-		     (puthash key (+ times 1) graph))))))
+		       (puthash key 1 (gethash (buffer-name) sgraph-table))
+		     (puthash key (+ times 1) (gethash (buffer-name) sgraph-table)))))))
 	   erc-channel-users)) 
 
 (defun sgraph-update ()
@@ -52,35 +53,36 @@
 	(funcall sgraph-update-function sender text)))))  
 
 (defun sgraph-create ()
-  "Create graph"
-  (make-local-variable 'graph))
+  "Create empty graph for current-buffer"
+  (puthash (buffer-name) (make-hash-table) sgraph-table))
 
 (defun sgraph-draw (channel)
-  "Draw a graph for the input channel"
+  "Draw a graph for the given channel"
   (interactive (list (completing-read "Draw graph for channel: "
 				      (mapcar 'buffer-name (erc-buffer-list)))))
-  (let ((buffer (concat "graph-" channel)))
+  (let ((buffer (format "sgraph-%s.dot" channel)))
     (get-buffer-create buffer)
     (set-buffer buffer)
-    (insert "digraph {")
-    (maphash (lambda (link value)
-	       (insert (format "\"%s\" -> \"%s\" [penwidth = %d]; \n"
-			       (substring link 0 (string-match "-" link))
-			       (substring link (+ 1 (string-match "-" link)))
-			       (if (> value 6)
-				   6
-				 value))))
-	     graph)
+    (insert "digraph {\n")
+    (let ((channel-graph (gethash channel sgraph-table)))
+      (maphash (lambda (link value)
+		 (insert (format "\"%s\" -> \"%s\" [penwidth = %d]; \n"
+				 (substring link 0 (string-match "-" link))
+				 (substring link (+ 1 (string-match "-" link)))
+				 (if (> value 4)
+				     6
+				   value))))
+	       channel-graph))
     (insert "}")
     (switch-to-buffer buffer)))
 
-(define-erc-module social-graph nil
+(define-erc-module social-graph sgraph
   "Social network gaphs similar to piespy"
   ;; Enable
   ((add-hook 'erc-join-hook 'sgraph-create)
    (add-hook 'erc-insert-post-hook 'sgraph-update))
   ;; Disable
-  ((remove-hook 'erc-insert-post-hook 'sgraph-update-hash)
+  ((remove-hook 'erc-insert-post-hook 'sgraph-update)
    (remove-hook 'erc-join-hook 'sgraph-create)))
 
 (provide 'erc-social-graph)

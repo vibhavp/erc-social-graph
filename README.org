@@ -9,5 +9,8 @@
   (require 'erc-social-graph)
   (erc-social-graph-enable)
   #+END_SRC
+* Screenshot:
+  [[./example.svg]]
 * TODOs
 ** TODO Make vertices/nodes larger depending on the number of lines spoken. 
+** TODO Dynamic graphs.

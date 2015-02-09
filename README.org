@@ -1,4 +1,5 @@
 #+TITLE: erc-social-graph
+#+STARTUP: inlineimages
 
 (WIP) A [[http://www.jibble.org/piespy/][PieSpy]]-esque social network graph module for ERC.
 

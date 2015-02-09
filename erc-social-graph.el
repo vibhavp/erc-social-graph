@@ -56,10 +56,6 @@
   "Create empty graph for current-buffer"
   (puthash (buffer-name) (make-hash-table :test 'equal) sgraph-table))
 
-(defun sgraph-clear ()
-  "Clear graph for current region"
-  )
-
 (defun sgraph-draw (channel)
   "Draw a graph for the given channel"
   (interactive (list (completing-read "Draw graph for channel: "

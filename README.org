@@ -12,6 +12,3 @@
   #+END_SRC
 * Screenshot:
   [[./example.png]]
-* TODOs
-** TODO Make vertices/nodes larger depending on the number of lines spoken. 
-** TODO Dynamic graphs.

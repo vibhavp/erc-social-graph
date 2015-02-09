@@ -1,7 +1,7 @@
 #+TITLE: erc-social-graph
 #+STARTUP: inlineimages
 
-(WIP) A [[http://www.jibble.org/piespy/][PieSpy]]-esque social network graph module for ERC.
+A [[http://www.jibble.org/piespy/][PieSpy]]-esque social network graph module for ERC.
 
 * Installation:
   Add this file to your load-path, add the module to =erc-modules=:
@@ -10,5 +10,13 @@
   (require 'erc-social-graph)
   (erc-social-graph-enable)
   #+END_SRC
-* Screenshot:
+* Usage:
+  After enabling the module, ~erc-social-graph~ will starting monitoring
+  IRC channels for any text sent by connected users (By hooking the parsing
+  function to ~erc-insert-post hook~ and ~erc-send-post-hook~). It checks the
+  sent text for any nick highlights, which it then adds to the hash table 
+  ~sgraph-table~. This table can be then "drawn" using ~sgaph-draw~, which converts
+  the user-selected channel graph to a textual [[http://en.wikipedia.org/wiki/DOT_(graph_description_language)][DOT graph representation]].
+  This can be compiled to a graph image using [[http://www.graphviz.org/][Graphviz]], or [[http://www.webgraphviz.com/][several]] [[http://graphviz-dev.appspot.com/][online]] [[http://sandbox.kidstrythisathome.com/erdos/][tools]].
+* Example:
   [[./example.png]]

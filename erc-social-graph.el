@@ -2,6 +2,16 @@
 
 ;;; Copyright (C) 2014 Vibhav Pant <vibhavp@gmail.com>
 
+;; Url: https://github.com/vibhavp/erc-social-graph
+;; Author: Vibhav Pant <vibhavp@gmail.com>
+;; Version: 1.0
+;; Keywords: erc graph
+
+;;; Commentary:
+;; erc-social-graph scans user received messages, and generates a social graph
+;; of the channel. These graphs can be later converted to a DOT graph, which
+;; can be drawn into a graph using Graphviz.
+
 ;;; License:
 
 ;; This program is free software: you can redistribute it and/or modify
@@ -16,7 +26,7 @@
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
-
+;; This file is not a part of GNU Emacs.
 ;;; Code:
 (require 'erc)
 
@@ -44,7 +54,8 @@
 	   erc-channel-users)) 
 
 (defun sgraph-update ()
-  "Parse the text in the current buffer, and pass it to sgraph-update-function"
+  "Check if the text sent in the current buffer is a user sent message,
+ and accordingly pass it to sgraph-update-function"
   (let ((text (buffer-substring-no-properties (point-min) (point-max))))    
     (when (string=  (substring text 0 1) "<")
       (let ((sender (substring text (+ 1 (string-match "<" text))
@@ -77,12 +88,14 @@
     (switch-to-buffer buffer)))
 
 (define-erc-module social-graph sgraph
-  "Social network gaphs similar to piespy"
+  "Social network graphs for emacs"
   ;; Enable
   ((add-hook 'erc-join-hook 'sgraph-create)
-   (add-hook 'erc-insert-post-hook 'sgraph-update))
+   (add-hook 'erc-insert-post-hook 'sgraph-update)
+   (add-hook 'erc-send-post-hook 'sgraph-update))
   ;; Disable
   ((remove-hook 'erc-insert-post-hook 'sgraph-update)
-   (remove-hook 'erc-join-hook 'sgraph-create)))
+   (remove-hook 'erc-join-hook 'sgraph-create)
+   (remove-hook 'erc-send-post-hook 'sgraph-update)))
 
 (provide 'erc-social-graph)

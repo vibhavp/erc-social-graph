@@ -1,6 +1,6 @@
 #+TITLE: erc-social-graph
 #+STARTUP: inlineimages
-[[https://travis-ci.org/vibhavp/erc-social-grap][https://travis-ci.org/vibhavp/erc-social-graph.svg?branch=master]]
+[[https://travis-ci.org/vibhavp/erc-social-graph][https://travis-ci.org/vibhavp/erc-social-graph.svg?branch=master]]
 
 A [[http://www.jibble.org/piespy/][PieSpy]]-esque social network graph module for ERC.
 

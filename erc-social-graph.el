@@ -90,7 +90,7 @@
     (insert "}")
     (switch-to-buffer buffer)))
 
-(define-erc-module social-graph
+(define-erc-module social-graph nil
   "Social network graphs for emacs"
   ;; Enable
   ((add-hook 'erc-join-hook 'erc-social-graph-create)

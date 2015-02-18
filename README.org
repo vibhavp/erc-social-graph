@@ -35,4 +35,5 @@ A [[http://www.jibble.org/piespy/][PieSpy]]-esque social network graph module fo
 
 * Example:
   An example of a dynamic graph.
+
   [[./example.gif]]

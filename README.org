@@ -42,9 +42,7 @@ A [[http://www.jibble.org/piespy/][PieSpy]]-esque social network graph module fo
   
   ~erc-social-graph-draw~ makes a DOT graph, opens it. This file can be saved 
   to a different location with ~C-x C-w~, and compiled with Graphviz's ~dot~
-  utility, or [[graphviz-dev.appspot.com/
-‎
-][various]] [[sandbox.kidstrythisathome.com/erdos/][online]] [[www.webgraphviz.com][tools]].
+  utility, or [[http://graphviz-dev.appspot.com/][various]] [[sandbox.kidstrythisathome.com/erdos/][online]] [[www.webgraphviz.com][tools]].
 
 ** Dynamic Graphs
    To enable dynamic graphs, set ~erc-social-graph-dynamic-graph~ to ~t~ with

@@ -4,36 +4,55 @@
 
 A [[http://www.jibble.org/piespy/][PieSpy]]-esque social network graph module for ERC.
 
+* Introduction
+  With ~erc-social-graph~, you can generate and preview [[http://en.wikipedia.org/wiki/Social_graph][Social graphs]] using ERC,
+  an IRC client for Emacs. Currently, the code only tracks direct mentions on IRC
+  channels, and ignores binary conversations and private messages (both of which
+  are planned for the future). This graph is stored in a standard Emacs Lisp
+  [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Hash-Tables.html][Hash Table]].
+  
+  This hash table can be converted to a textual graph in the [[http://en.wikipedia.org/wiki/DOT_(graph_description_language)][DOT Graph Language]].
+  This is a simple directed graph where each node represents an individual user, 
+  while the edges represent relationships between users. The bolder the edges,
+  the stronger the relationship.
+
+  The graph can also be previewed dynamically, resulting in a graph that changes
+  as messages are sent to the channel.
+
+  [[./example.gif]]
+
 * Installation:
 ** Via package.el
-   erc-social-graph is available on [[http://melpa.org][MELPA]], just add MELPA to your package
+   ~erc-social-graph~ is available on [[http://melpa.org][MELPA]], just add MELPA to your package
    archives, and install the package with ~M-x package-install erc-social-graph~
 ** Via el-get
    erc-social-graph can also be installed using [[https://github.com/dimitri/el-get][el-get]]. To do so, run
    ~M-x el-get-install erc-social-graph~
 ** Via Git:
-  Clone this repo to a desired location, a
+  Clone this repo to a desired location,
   add this directory to your load-path, add the module to =erc-modules=:
   #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path (expand-file-name "/path/to/erc-social-graph.el"))
   (require 'erc-social-graph)
   (erc-social-graph-enable)
   #+END_SRC
-* Usage:
-  After enabling the module, ~erc-social-graph~ will starting monitoring
-  IRC channels for any text sent by connected users (By hooking the parsing
-  function to ~erc-insert-post hook~ and ~erc-send-post-hook~). It checks the
-  sent text for any nick highlights, which it then adds to the hash table 
-  ~sgraph-table~. This table can be then "drawn" using ~sgaph-draw~, which converts
-  the user-selected channel graph to a textual [[http://en.wikipedia.org/wiki/DOT_(graph_description_language)][DOT graph representation]].
-  This can be compiled to a graph image using [[http://www.graphviz.org/][Graphviz]], or [[http://www.webgraphviz.com/][several]] [[http://graphviz-dev.appspot.com/][online]] [[http://sandbox.kidstrythisathome.com/erdos/][tools]].
+* Usage:  
+  To enable social graphs, run ~M-x erc-social-graph-enable~. The module now
+  scans connected channels, and updates it's hash table accordingly.
   
-** Dynamic Graphs:
-   If the option ~erc-social-graph-dynamic-graph~ is enabled 
-   (~M-x customize-group erc-social-graph~), ~sgraph-draw~ will preview the graph
-   dot's -Tx11 option, which makes use of Xlib canvas.
+  ~erc-social-graph-draw~ makes a DOT graph, opens it. This file can be saved 
+  to a different location with ~C-x C-w~, and compiled with Graphviz's ~dot~
+  utility, or [[graphviz-dev.appspot.com/
+‎
+][various]] [[sandbox.kidstrythisathome.com/erdos/][online]] [[www.webgraphviz.com][tools]].
 
-* Example:
-  An example of a dynamic graph.
-
-  [[./example.gif]]
+** Dynamic Graphs
+   To enable dynamic graphs, set ~erc-social-graph-dynamic-graph~ to ~t~ with
+   #+BEGIN_SRC emacs-lisp
+(setq erc-social-graph-dynamic-graph t)
+   #+END_SRC
+   Or, run ~customize-graph erc-social-graph~ and set the option to ~t~.
+   When this option is set, ~erc-social-graph-draw~ runs ~dot~ with the ~-Tx11~
+   option to create a new window which updates the graph as messages are sent
+   to the channel.
+  

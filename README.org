@@ -27,5 +27,12 @@ A [[http://www.jibble.org/piespy/][PieSpy]]-esque social network graph module fo
   ~sgraph-table~. This table can be then "drawn" using ~sgaph-draw~, which converts
   the user-selected channel graph to a textual [[http://en.wikipedia.org/wiki/DOT_(graph_description_language)][DOT graph representation]].
   This can be compiled to a graph image using [[http://www.graphviz.org/][Graphviz]], or [[http://www.webgraphviz.com/][several]] [[http://graphviz-dev.appspot.com/][online]] [[http://sandbox.kidstrythisathome.com/erdos/][tools]].
+  
+** Dynamic Graphs:
+   If the option ~erc-social-graph-dynamic-graph~ is enabled 
+   (~M-x customize-group erc-social-graph~), ~sgraph-draw~ will preview the graph
+   dot's -Tx11 option, which makes use of Xlib canvas.
+
 * Example:
-  [[./example.png]]
+  An example of a dynamic graph.
+  [[./example.gif]]

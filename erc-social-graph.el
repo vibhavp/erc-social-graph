@@ -29,7 +29,7 @@
 ;; This file is not a part of GNU Emacs.
 ;;; Code:
 (require 'erc)
-(require 'cl-lib)
+(require 'cl)
 
 (defcustom erc-social-graph-update-function 'erc-social-graph-update-graph
   "The function used for updating the graph hash table.
@@ -61,7 +61,7 @@
 		       (puthash key (setq mentions 1) (gethash
 						       (buffer-name)
 						       erc-social-graph-table))
-		     (puthash key (cl-incf mentions) (gethash (buffer-name)
+		     (puthash key (incf mentions) (gethash (buffer-name)
 							   erc-social-graph-table)))
 		   (when erc-social-graph-dynamic-graph
 		     (erc-social-graph-update-dot-buffer (buffer-name)

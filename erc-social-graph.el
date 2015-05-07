@@ -48,32 +48,39 @@
 (defun erc-social-graph-update-graph (sender text)
   "Update the graph for the current channel"
   (maphash (lambda (nick value)
-	     (let ((result (ignore-errors (string-match
-					   (format "%s\\([^[:alpha:]]\\|$\\)"
-						   (downcase nick))
-					   (downcase text)))))
-	       (when result
-		 (let* ((key (concat (downcase sender) "-" (downcase nick)))
-			(mentions (gethash key (gethash (buffer-name)
-						     erc-social-graph-table)
-					nil)))
-		   (if (eq mentions nil)
-		       (puthash key (setq mentions 1) (gethash
-						       (buffer-name)
-						       erc-social-graph-table))
-		     (puthash key (incf mentions) (gethash (buffer-name)
-							   erc-social-graph-table)))
-		   (when erc-social-graph-dynamic-graph
-		     (erc-social-graph-update-dot-buffer (buffer-name)
-							 (downcase sender)
-							 (downcase nick)
-							 mentions))))))
-	   erc-channel-users))
+         (let ((result (ignore-errors (string-match
+                       (format "%s\\([^[:alpha:]]\\|$\\)"
+                           (downcase nick))
+                       (downcase text)))))
+           (when result
+         (let* ((key (concat (downcase sender) "-" (downcase nick)))
+            (mentions (gethash key (gethash (buffer-name)
+                             erc-social-graph-table)
+                    nil)))
+           (if (eq mentions nil)
+               (puthash key (setq mentions 1) (gethash
+                               (buffer-name)
+                               erc-social-graph-table))
+             (puthash key (incf mentions) (gethash (buffer-name)
+                               erc-social-graph-table)))
+           (when erc-social-graph-dynamic-graph
+             (erc-social-graph-update-dot-buffer (buffer-name)
+                             (downcase sender)
+                             (downcase nick)
+                             mentions))))))
+       erc-channel-users))
+ (defun erc-social-graph-chomp (str)
+   "Chomp leading and tailing whitespace from STR."
+   (while (string-match "\\`\n+\\|^\\s-+\\|\\s-+$\\|\n+\\'"
+                        str)
+     (setq str (replace-match "" t t str)))
+   str)
+
 
 (defun erc-social-graph-check ()
   "Check if the text sent in the current buffer is a user sent message,
  and accordingly pass it to `erc-social-graph-update-function'"
-  (let ((text (buffer-substring-no-properties (point-min) (point-max))))    
+  (let ((text (erc-social-graph-chomp (buffer-substring-no-properties (point-min) (point-max)))))
     (when (string=  (substring text 0 1) "<")
       (let ((sender (substring text (+ 1 (string-match "<" text))
 				(string-match ">" text))))

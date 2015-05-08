@@ -149,25 +149,24 @@
 If `erc-social-graph-dynamic-graph' is non-nil preview the graph using dot's
 \"Tx11\" option"
   (interactive (list (completing-read "Draw graph for channel: "
-				      (mapcar 'buffer-name (erc-buffer-list)))))
-  (let ((file (gethash channel erc-social-graph-files))
-	(channel-graph (gethash channel erc-social-graph-table)))
-    (unless file
-      (with-current-buffer (erc-social-graph-make-temp-file channel)
-	(goto-char (- (point-max) 2))
-	(maphash (lambda (link value)
-		   (insert (format "\"%s\" -> \"%s\" [penwidth = %d];\n"
-				   (substring link 0 (string-match "-" link))
-				   (substring link (+ 1 (string-match "-"
-								      link)))
-				   (if (> value 4)
-				       6
-				     value))))
-		 channel-graph)))
+                      (mapcar 'buffer-name (erc-buffer-list)))))
+  (let ((file (or (gethash channel erc-social-graph-files)
+                  (erc-social-graph-make-temp-file channel)))
+        (channel-graph (gethash channel erc-social-graph-table)))
+    (with-current-buffer (find-file file)
+      (goto-char (- (point-max) 2))
+      (maphash (lambda (link value)
+                 (insert (format "\"%s\" -> \"%s\" [penwidth = %d];\n"
+                                 (substring link 0 (string-match "-" link))
+                                 (substring link (+ 1 (string-match "-" link)))
+                                 (if (> value 4)
+                                     6
+                                   value))))
+               channel-graph))
     (if erc-social-graph-dynamic-graph
-	(async-shell-command (format "dot -Tx11 %s"
-				     (gethash channel erc-social-graph-files)))
-	(find-file file))))
+        (async-shell-command (format "dot -Tx11 %s"
+                                     (gethash channel erc-social-graph-files)))
+      (find-file file))))
 
 (define-erc-module social-graph nil
   "Social network graphs for emacs"
